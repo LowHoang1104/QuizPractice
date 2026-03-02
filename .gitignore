@@ -1,0 +1,63 @@
+########################
+# OS
+########################
+.DS_Store
+Thumbs.db
+
+########################
+# Node / Frontend (QuizClient)
+########################
+QuizClient/node_modules/
+QuizClient/dist/
+QuizClient/.vite/
+QuizClient/.turbo/
+QuizClient/coverage/
+QuizClient/npm-debug.log*
+QuizClient/yarn-debug.log*
+QuizClient/yarn-error.log*
+
+########################
+# .NET / Backend (QuizServer)
+########################
+QuizServer/**/bin/
+QuizServer/**/obj/
+QuizServer/**/TestResults/
+QuizServer/.vs/
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+########################
+# Logs (chung)
+########################
+*.log
+logs/
+log/
+
+########################
+# Env / secrets
+########################
+.env
+.env.*
+*.secret.*
+*.snk
+
+########################
+# IDE / Editor
+########################
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+########################
+# Khác
+########################
+*.orig
+*.tmp

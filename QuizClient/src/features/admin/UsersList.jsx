@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { usersApi } from '../../services/api';
 
 const ROLES = [
@@ -127,6 +128,7 @@ export default function UsersList() {
                 <td className="p-3">{u.roleName}</td>
                 <td className="p-3">{u.status}</td>
                 <td className="p-3 text-right">
+                  <Link to={`/admin/users/${u.id}`} className="text-slate-600 hover:underline mr-2">Chi tiết</Link>
                   <button onClick={() => openEdit(u)} className="text-indigo-600 hover:underline mr-2">Sửa</button>
                   <button onClick={() => handleDelete(u)} className="text-red-600 hover:underline">Xóa</button>
                 </td>

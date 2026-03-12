@@ -13,7 +13,7 @@ export function getDefaultPathByRole(role) {
       return '/expert/subjects';
     case 'Customer':
     default:
-      return '/customer/my-registrations';
+      return '/customer/practices';
   }
 }
 

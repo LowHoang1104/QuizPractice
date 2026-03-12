@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { settingsApi } from '../../services/api';
 
 export default function SettingsList() {
@@ -97,6 +98,7 @@ export default function SettingsList() {
                 <td className="p-3">{s.order}</td>
                 <td className="p-3">{s.status}</td>
                 <td className="p-3 text-right">
+                  <Link to={`/admin/settings/${s.id}`} className="text-slate-600 hover:underline mr-2">Chi tiết</Link>
                   <button onClick={() => openEdit(s)} className="text-indigo-600 hover:underline mr-2">Sửa</button>
                   <button onClick={() => handleDelete(s)} className="text-red-600 hover:underline">Xóa</button>
                 </td>

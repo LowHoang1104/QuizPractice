@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { quizApi } from '../../services/api';
 import QuizHandle from './QuizHandle';
 
 export default function QuizPracticePage() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const subjectId = parseInt(id, 10);
+  const rawType = parseInt(searchParams.get('type') || '0', 10);
+  const rawCount = parseInt(searchParams.get('count') || '10', 10);
+  const quizType = Number.isNaN(rawType) ? 0 : rawType;
+  const questionCount = Number.isNaN(rawCount) ? 10 : Math.max(5, Math.min(100, rawCount));
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,8 +28,8 @@ export default function QuizPracticePage() {
       try {
         const { data } = await quizApi.start({
           subjectId,
-          questionCount: 10,
-          type: 0, // Practice
+          questionCount,
+          type: quizType,
         });
         if (!cancelled) setQuiz(data);
       } catch (e) {
@@ -36,7 +41,7 @@ export default function QuizPracticePage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [subjectId]);
+  }, [subjectId, questionCount, quizType]);
 
   const handleSubmitted = (submitResult) => {
     setResult(submitResult);

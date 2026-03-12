@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { registrationsApi, usersApi, subjectsApi } from '../../services/api';
 
@@ -151,6 +152,7 @@ export default function RegistrationsList() {
                 <td className="p-3">{r.totalCost?.toLocaleString('vi-VN')}</td>
                 <td className="p-3">{r.status}</td>
                 <td className="p-3 text-right">
+                  <Link to={`/sale/registrations/${r.id}`} className="text-slate-600 hover:underline mr-2">Chi tiết</Link>
                   <button onClick={() => openStatusModal(r)} className="text-indigo-600 hover:underline">Cập nhật trạng thái</button>
                 </td>
               </tr>

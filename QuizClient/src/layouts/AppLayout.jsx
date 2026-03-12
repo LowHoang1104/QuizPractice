@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getHomePathByRole } from '../utils/auth';
 
 function getMenuItems(role) {
@@ -18,7 +18,6 @@ function getMenuItems(role) {
     items.push({ to: '/expert/subjects', label: 'Nội dung môn học' });
   }
   if (role === 'Customer') {
-    items.push({ to: '/customer/my-registrations', label: 'Đăng ký của tôi' });
     items.push({ to: '/customer/practices', label: 'Luyện tập' });
   }
   return items;
@@ -26,6 +25,7 @@ function getMenuItems(role) {
 
 export default function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const userStr = localStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
   const role = user?.role || 'Customer';
@@ -33,23 +33,29 @@ export default function AppLayout() {
   const homePath = getHomePathByRole(role);
   const showSubjectsLink = role === 'Customer';
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login', { replace: true });
+  };
+
   return (
     <div className="min-h-screen flex bg-slate-100">
-      <aside className="w-56 bg-slate-800 text-slate-200 flex flex-col">
-        <div className="p-4 border-b border-slate-700">
+      <aside className="w-60 bg-slate-900 text-slate-200 flex flex-col shadow-xl">
+        <div className="p-4 border-b border-slate-700/80">
           <Link to={homePath} className="font-bold text-lg text-white">Quiz System</Link>
         </div>
         <nav className="flex-1 p-2 space-y-0.5">
           <Link
             to={homePath}
-            className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === homePath ? 'bg-indigo-600 text-white' : 'hover:bg-slate-700'}`}
+            className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === homePath ? 'bg-cyan-700 text-white' : 'hover:bg-slate-800'}`}
           >
             Trang chủ
           </Link>
           {showSubjectsLink && (
             <Link
               to="/subjects"
-              className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === '/subjects' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-700'}`}
+              className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === '/subjects' ? 'bg-cyan-700 text-white' : 'hover:bg-slate-800'}`}
             >
               Môn học
             </Link>
@@ -58,22 +64,29 @@ export default function AppLayout() {
             <Link
               key={item.to}
               to={item.to}
-              className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === item.to ? 'bg-indigo-600 text-white' : 'hover:bg-slate-700'}`}
+              className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === item.to ? 'bg-cyan-700 text-white' : 'hover:bg-slate-800'}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="p-2 border-t border-slate-700">
+        <div className="p-2 border-t border-slate-700 space-y-1">
           <Link
             to="/profile"
-            className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === '/profile' ? 'bg-indigo-600 text-white' : 'hover:bg-slate-700'}`}
+            className={`block px-3 py-2 rounded-lg text-sm ${location.pathname === '/profile' ? 'bg-cyan-700 text-white' : 'hover:bg-slate-800'}`}
           >
             Hồ sơ
           </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm text-rose-200 hover:bg-rose-900/40"
+          >
+            Đăng xuất
+          </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-[radial-gradient(circle_at_top_right,_#ecfeff,_#f1f5f9_45%)]">
         <Outlet />
       </main>
     </div>

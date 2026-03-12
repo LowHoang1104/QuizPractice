@@ -25,7 +25,8 @@ public class QuizService : IQuizService
             .Select(q => q.Id)
             .ToListAsync(ct);
         var questionIds = allIds.OrderBy(_ => Guid.NewGuid()).Take(request.QuestionCount).ToList();
-        if (questionIds.Count == 0) return null;
+        if (questionIds.Count == 0)
+            throw new InvalidOperationException("Mon hoc nay chua co cau hoi de tao bai quiz.");
 
         var quiz = new Quiz
         {

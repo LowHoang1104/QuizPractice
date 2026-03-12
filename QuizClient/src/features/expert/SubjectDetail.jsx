@@ -40,6 +40,12 @@ export default function SubjectDetail() {
       <h1 className="text-xl font-bold text-slate-800 mb-4">{subject.name}</h1>
       <p className="text-slate-600 mb-6">{subject.description || '-'}</p>
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        <Link to={`/expert/subjects/${id}/lessons`} className="px-3 py-1.5 rounded-lg border border-slate-300 text-sm hover:bg-slate-50">Lessons</Link>
+        <Link to={`/expert/subjects/${id}/questions`} className="px-3 py-1.5 rounded-lg border border-slate-300 text-sm hover:bg-slate-50">Questions</Link>
+        <Link to={`/expert/subjects/${id}/quizzes`} className="px-3 py-1.5 rounded-lg border border-slate-300 text-sm hover:bg-slate-50">Quizzes</Link>
+      </div>
+
       <div className="space-y-6">
         <div>
           <h2 className="font-semibold text-slate-800 mb-2">Dimensions</h2>

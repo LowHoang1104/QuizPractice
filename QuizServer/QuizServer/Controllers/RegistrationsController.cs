@@ -62,19 +62,23 @@ public class RegistrationsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin,Sale")]
+    [Authorize(Roles = "Admin,Sale,Customer")]
     public async Task<IActionResult> Create([FromBody] CreateRegistrationRequest req, CancellationToken ct)
     {
+        var currentUserId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+        var currentRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        var targetUserId = currentRole == "Customer" ? currentUserId : req.UserId;
+
         var r = new Domain.Entities.SubjectRegistration
         {
-            UserId = req.UserId,
+            UserId = targetUserId,
             SubjectId = req.SubjectId,
             PricePackageId = req.PricePackageId,
             TotalCost = req.TotalCost,
             ValidFrom = req.ValidFrom,
             ValidTo = req.ValidTo,
             Notes = req.Notes,
-            Status = "Submitted"
+            Status = currentRole == "Customer" ? "Paid" : "Submitted"
         };
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (int.TryParse(userId, out var saleId)) r.SaleId = saleId;

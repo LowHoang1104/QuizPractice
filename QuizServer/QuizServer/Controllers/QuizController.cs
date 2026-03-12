@@ -20,10 +20,17 @@ public class QuizController : ControllerBase
     [HttpPost("start")]
     public async Task<IActionResult> GetQuiz([FromBody] GetQuizRequest request, CancellationToken ct)
     {
-        var quiz = await _quizService.GetQuizAsync(UserId, request, ct);
-        if (quiz == null)
-            return BadRequest("Bạn chưa đăng ký môn này hoặc gói đã hết hạn. Vui lòng đăng ký trước khi luyện tập.");
-        return Ok(quiz);
+        try
+        {
+            var quiz = await _quizService.GetQuizAsync(UserId, request, ct);
+            if (quiz == null)
+                return BadRequest("Ban chua dang ky mon nay hoac goi da het han. Vui long dang ky truoc khi luyen tap.");
+            return Ok(quiz);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("submit")]

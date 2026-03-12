@@ -43,6 +43,8 @@ export const authApi = {
 
 export const subjectsApi = {
   getAll: () => api.get('/api/subjects'),
+  getById: (id) => api.get(`/api/subjects/${id}`),
+  getPublicPricePackages: (id) => api.get(`/api/subjects/${id}/price-packages`),
   getListAdmin: (params) => api.get('/api/subjects/admin', { params }),
   getByIdAdmin: (id) => api.get(`/api/subjects/admin/${id}`),
   create: (data) => api.post('/api/subjects/admin', data),

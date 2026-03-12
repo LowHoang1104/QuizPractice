@@ -35,7 +35,7 @@ export default function RegisterPage() {
         password,
       });
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ email: data.email, fullName: data.fullName, role: data.role }));
+      localStorage.setItem('user', JSON.stringify({ id: data.userId, email: data.email, fullName: data.fullName, role: data.role }));
       navigate(getDefaultPathByRole(data.role || 'Customer'), { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || err.response?.data || 'Đăng ký thất bại. Email có thể đã tồn tại.');

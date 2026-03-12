@@ -52,6 +52,20 @@ public class SubjectsController : ControllerBase
         });
     }
 
+    [HttpGet("{id:int}/price-packages")]
+    public async Task<IActionResult> GetPricePackagesPublic(int id, CancellationToken ct)
+    {
+        var subjectExists = await _db.Subjects.AnyAsync(s => s.Id == id && s.Status == "Published", ct);
+        if (!subjectExists) return NotFound();
+
+        var list = await _db.PricePackages
+            .Where(p => p.SubjectId == id && p.Status == "Active")
+            .OrderBy(p => p.SalePrice)
+            .Select(p => new PricePackageDto(p.Id, p.SubjectId, p.Name, p.ListPrice, p.SalePrice, p.DurationMonths, p.Description, p.Status))
+            .ToListAsync(ct);
+        return Ok(list);
+    }
+
     [HttpGet("admin")]
     [Authorize(Roles = "Admin,Expert,Sale")]
     public async Task<IActionResult> GetListAdmin([FromQuery] string? status, [FromQuery] int? ownerId, CancellationToken ct)

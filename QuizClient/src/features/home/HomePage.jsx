@@ -13,10 +13,13 @@ export default function HomePage() {
             <Link to="/subjects" className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-50">
               Môn học
             </Link>
+            <Link to="/blogs" className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-50">
+              Blog
+            </Link>
             {isLoggedIn ? (
               <>
-                <Link to="/customer/my-registrations" className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-50">
-                  Đăng ký của tôi
+                <Link to="/customer/practices" className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-50">
+                  Luyện tập
                 </Link>
                 <Link to="/profile" className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700">
                   {userStr ? JSON.parse(userStr).fullName : 'Hồ sơ'}

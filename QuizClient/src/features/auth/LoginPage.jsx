@@ -17,7 +17,7 @@ export default function LoginPage() {
     try {
       const { data } = await authApi.login({ email, password });
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ email: data.email, fullName: data.fullName, role: data.role }));
+      localStorage.setItem('user', JSON.stringify({ id: data.userId, email: data.email, fullName: data.fullName, role: data.role }));
       navigate(getDefaultPathByRole(data.role), { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng nhập thất bại. Kiểm tra email/mật khẩu hoặc backend đã chạy chưa.');

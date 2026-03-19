@@ -10,4 +10,6 @@ public interface IAuthService
     Task<UserProfileDto?> GetProfileAsync(int userId, CancellationToken ct = default);
     Task<bool> UpdateProfileAsync(int userId, UpdateProfileRequest request, CancellationToken ct = default);
     Task<bool> ChangePasswordAsync(int userId, ChangePasswordRequest request, CancellationToken ct = default);
+    Task<ForgotPasswordResponse?> CreatePasswordResetTokenAsync(ForgotPasswordRequest request, CancellationToken ct = default);
+    Task<bool> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken ct = default);
 }

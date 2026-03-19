@@ -1,4 +1,4 @@
-namespace QuizServer.Domain.Entities;
+    namespace QuizServer.Domain.Entities;
 
 public class Setting
 {

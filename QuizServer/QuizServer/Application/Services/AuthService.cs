@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -109,6 +110,46 @@ public class AuthService : IAuthService
         return true;
     }
 
+    public async Task<ForgotPasswordResponse?> CreatePasswordResetTokenAsync(ForgotPasswordRequest request, CancellationToken ct = default)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == request.Email, ct);
+        if (user == null) return null;
+
+        var rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        var tokenHash = HashToken(rawToken);
+        var expires = DateTime.UtcNow.AddMinutes(30);
+
+        _db.PasswordResetTokens.Add(new PasswordResetToken
+        {
+            UserId = user.Id,
+            TokenHash = tokenHash,
+            ExpiresAt = expires
+        });
+        await _db.SaveChangesAsync(ct);
+
+        // Demo: trả token trực tiếp (thực tế: gửi email)
+        return new ForgotPasswordResponse(rawToken, expires);
+    }
+
+    public async Task<bool> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken ct = default)
+    {
+        var tokenHash = HashToken(request.ResetToken);
+        var now = DateTime.UtcNow;
+
+        var reset = await _db.PasswordResetTokens
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
+        if (reset == null) return false;
+        if (reset.UsedAt != null) return false;
+        if (reset.ExpiresAt < now) return false;
+        if (reset.User.PasswordHash == null) return false;
+
+        reset.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+        reset.UsedAt = now;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     private AuthResponse BuildResponse(User user)
     {
         var token = GenerateJwt(user);
@@ -134,6 +175,13 @@ public class AuthService : IAuthService
             signingCredentials: creds
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private static string HashToken(string rawToken)
+    {
+        using var sha = SHA256.Create();
+        var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
+        return Convert.ToBase64String(bytes);
     }
 }
 

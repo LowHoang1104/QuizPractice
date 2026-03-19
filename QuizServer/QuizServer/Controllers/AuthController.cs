@@ -34,6 +34,21 @@ public class AuthController : ControllerBase
         return result == null ? Unauthorized() : Ok(result);
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request, CancellationToken ct)
+    {
+        var result = await _authService.CreatePasswordResetTokenAsync(request, ct);
+        // Không leak thông tin user tồn tại hay không
+        return Ok(result ?? new ForgotPasswordResponse("N/A", DateTime.UtcNow));
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request, CancellationToken ct)
+    {
+        var ok = await _authService.ResetPasswordAsync(request, ct);
+        return ok ? Ok() : BadRequest("Token không hợp lệ hoặc đã hết hạn.");
+    }
+
     [Authorize]
     [HttpGet("me")]
     public IActionResult Me() => Ok(new { User.Identity?.Name });

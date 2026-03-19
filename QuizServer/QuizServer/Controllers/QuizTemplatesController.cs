@@ -8,7 +8,6 @@ namespace QuizServer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Expert")]
 public class QuizTemplatesController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
@@ -16,6 +15,7 @@ public class QuizTemplatesController : ControllerBase
     public QuizTemplatesController(ApplicationDbContext db) => _db = db;
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Expert,Customer")]
     public async Task<IActionResult> GetList([FromQuery] int? subjectId, CancellationToken ct)
     {
         var q = _db.QuizTemplates.AsQueryable();
@@ -29,6 +29,7 @@ public class QuizTemplatesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin,Expert,Customer")]
     public async Task<IActionResult> GetById(int id, CancellationToken ct)
     {
         var x = await _db.QuizTemplates.FindAsync(new object[] { id }, ct);
@@ -37,6 +38,7 @@ public class QuizTemplatesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Expert")]
     public async Task<IActionResult> Create([FromBody] CreateQuizTemplateRequest req, CancellationToken ct)
     {
         var x = new Domain.Entities.QuizTemplate
@@ -55,6 +57,7 @@ public class QuizTemplatesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin,Expert")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateQuizTemplateRequest req, CancellationToken ct)
     {
         var x = await _db.QuizTemplates.FindAsync(new object[] { id }, ct);

@@ -24,6 +24,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<SubjectRegistration> SubjectRegistrations => Set<SubjectRegistration>();
     public DbSet<QuizTemplate> QuizTemplates => Set<QuizTemplate>();
     public DbSet<Lesson> Lessons => Set<Lesson>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -82,8 +83,18 @@ public class ApplicationDbContext : DbContext
             e.HasKey(x => x.Id);
             e.Property(x => x.Content).HasMaxLength(2000);
             e.Property(x => x.Explanation).HasMaxLength(2000);
+            e.Property(x => x.Status).HasMaxLength(20);
             e.HasOne(x => x.Subject).WithMany(s => s.Questions).HasForeignKey(x => x.SubjectId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne(x => x.Dimension).WithMany(d => d.Questions).HasForeignKey(x => x.DimensionId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // PasswordResetToken
+        modelBuilder.Entity<PasswordResetToken>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.TokenHash).HasMaxLength(200);
+            e.HasIndex(x => x.TokenHash).IsUnique();
+            e.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         });
 
         // Answer

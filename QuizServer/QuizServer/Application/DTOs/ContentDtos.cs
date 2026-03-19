@@ -18,13 +18,16 @@ public record CreatePricePackageRequest(int SubjectId, string Name, decimal List
 public record UpdatePricePackageRequest(string Name, decimal ListPrice, decimal SalePrice, int DurationMonths, string? Description, string Status);
 
 // Question (admin/expert - distinct from QuizDtos.QuestionDto)
-public record QuestionAdminDto(int Id, int SubjectId, int? DimensionId, string Content, string? Explanation, QuestionLevel Level);
-public record QuestionWithAnswersAdminDto(int Id, int SubjectId, int? DimensionId, string Content, string? Explanation, QuestionLevel Level, List<AnswerAdminDto> Answers);
+public record QuestionAdminDto(int Id, int SubjectId, int? DimensionId, string Content, string? Explanation, QuestionLevel Level, string Status);
+public record QuestionWithAnswersAdminDto(int Id, int SubjectId, int? DimensionId, string Content, string? Explanation, QuestionLevel Level, string Status, List<AnswerAdminDto> Answers);
 public record CreateQuestionRequest(int SubjectId, int? DimensionId, string Content, string? Explanation, QuestionLevel Level, List<CreateAnswerRequest> Answers);
-public record UpdateQuestionRequest(int? DimensionId, string Content, string? Explanation, QuestionLevel Level, List<UpdateAnswerRequest>? Answers);
+public record UpdateQuestionRequest(int? DimensionId, string Content, string? Explanation, QuestionLevel Level, string Status, List<UpdateAnswerRequest>? Answers);
 public record AnswerAdminDto(int Id, int QuestionId, string Content, bool IsCorrect, int OrderIndex);
 public record CreateAnswerRequest(string Content, bool IsCorrect, int OrderIndex);
 public record UpdateAnswerRequest(int? Id, string Content, bool IsCorrect, int OrderIndex);
+
+// Question import
+public record ImportQuestionsResult(int Total, int Success, int Failed, List<string> Errors);
 
 // QuizTemplate
 public record QuizTemplateDto(int Id, int SubjectId, string Name, QuestionLevel Level, int QuestionCount, int DurationMinutes, decimal PassRate, string Type);

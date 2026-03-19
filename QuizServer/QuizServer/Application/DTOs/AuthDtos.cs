@@ -13,3 +13,7 @@ public record UserProfileDto(int Id, string Email, string FullName, string? Gend
 public record UpdateProfileRequest(string FullName, string? Gender, string? Mobile);
 
 public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
+
+public record ForgotPasswordRequest(string Email);
+public record ForgotPasswordResponse(string ResetToken, DateTime ExpiresAt);
+public record ResetPasswordRequest(string ResetToken, string NewPassword);

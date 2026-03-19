@@ -8,6 +8,7 @@ public class Question
     public string Content { get; set; } = string.Empty;
     public string? Explanation { get; set; }
     public QuestionLevel Level { get; set; }
+    public string Status { get; set; } = "Active"; // Active, Inactive
 
     public Subject Subject { get; set; } = null!;
     public Dimension? Dimension { get; set; }

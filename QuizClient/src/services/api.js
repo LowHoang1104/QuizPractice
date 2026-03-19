@@ -35,6 +35,8 @@ export const authApi = {
   login: (data) => api.post('/api/auth/login', data),
   register: (data) => api.post('/api/auth/register', data),
   googleLogin: (data) => api.post('/api/auth/google', data),
+  forgotPassword: (data) => api.post('/api/auth/forgot-password', data),
+  resetPassword: (data) => api.post('/api/auth/reset-password', data),
   me: () => api.get('/api/auth/me'),
   getProfile: () => api.get('/api/auth/profile'),
   updateProfile: (data) => api.put('/api/auth/profile', data),
@@ -102,6 +104,13 @@ export const questionsApi = {
   getById: (id) => api.get(`/api/questions/${id}`),
   create: (data) => api.post('/api/questions', data),
   update: (id, data) => api.put(`/api/questions/${id}`, data),
+  importCsv: (subjectId, file) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api.post(`/api/questions/import?subjectId=${subjectId}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 export const quizTemplatesApi = {
@@ -122,4 +131,5 @@ export const quizApi = {
   start: (data) => api.post('/api/quiz/start', data),
   submit: (data) => api.post('/api/quiz/submit', data),
   getResult: (quizResultId) => api.get(`/api/quiz/result/${quizResultId}`),
+  getHistory: (params) => api.get('/api/quiz/history', { params }),
 };
